@@ -76,6 +76,10 @@
         @apply max-w-5xl mx-auto;
     }
 
+    .page-list-xwide {
+        @apply max-w-6xl mx-auto;
+    }
+
     .form-control {
         @apply w-full h-10 px-3 text-sm leading-5
                border border-slate-300 rounded-lg bg-white

@@ -1,5 +1,5 @@
 {{define "main"}}
-<div class="page-list-wide">
+<div class="page-list-xwide">
     <header class="page-header flex flex-wrap items-end justify-between gap-4">
         <div>
             <p class="page-header-eyebrow">Cadastros</p>
@@ -49,9 +49,8 @@
                 <tr>
                     <th scope="col">Código</th>
                     <th scope="col">Nome</th>
-                    <th scope="col">CNPJ</th>
-                    <th scope="col">Status</th>
                     <th scope="col">Validade</th>
+                    <th scope="col">Status</th>
                     <th scope="col" class="text-right">Ações</th>
                 </tr>
             </thead>
@@ -60,13 +59,12 @@
                 <tr class="data-table-row">
                     <td class="font-medium text-slate-800">{{.ClienteID}}</td>
                     <td class="text-slate-700">{{.Nome}}</td>
-                    <td class="text-slate-600">{{.CNPJ}}</td>
+                    <td class="text-slate-600">{{formatDateBR .ValidUntil}}</td>
                     <td>
                         <span class="badge {{if eq .Status "active"}}badge-success{{else if eq .Status "suspended"}}badge-warning{{else}}badge-muted{{end}}">
                             {{statusLabel .Status}}
                         </span>
                     </td>
-                    <td class="text-slate-600">{{formatDateBR .ValidUntil}}</td>
                     <td class="text-right">
                         <div class="inline-flex items-center gap-1">
                             <a href="/config/clientes/{{.ClienteID}}/edit" class="btn-ghost btn-sm">Alterar</a>

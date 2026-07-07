@@ -82,12 +82,10 @@ func modelsCliente() models.Cliente {
 		ClienteID:      "cliente1",
 		Nome:           "Cliente Teste",
 		CNPJ:           "",
-		Email:          "test@example.com",
-		Telefone:       "",
-		SlugTurso:      "cliente1",
-		ValidUntil:     "2027-12-31",
-		MaxInstalacoes: 2,
-		Status:         "active",
+		Email:      "test@example.com",
+		Telefone:   "",
+		ValidUntil: "2027-12-31",
+		Status:     "active",
 		Observacao:     "obs",
 	}
 }

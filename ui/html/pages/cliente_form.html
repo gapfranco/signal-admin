@@ -42,16 +42,9 @@ function cnpjFeedback(input) {
         <form action="/config/clientes/{{.Data.Cliente.ClienteID}}/edit" method="POST" class="space-y-5">
             <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 
-            <div class="grid grid-cols-1 md:grid-cols-[10rem_1fr] gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-slate-800 mb-1">Código</label>
-                    <input type="text" value="{{.Data.Cliente.ClienteID}}" disabled class="form-control text-slate-400">
-                    <p class="form-hint">Não pode ser alterado.</p>
-                </div>
-                <div>
-                    <label for="nome" class="block text-sm font-medium text-slate-800 mb-1">Nome / Razão Social</label>
-                    <input type="text" id="nome" name="nome" value="{{.Data.Cliente.Nome}}" required autofocus class="form-control">
-                </div>
+            <div>
+                <label for="nome" class="block text-sm font-medium text-slate-800 mb-1">Nome / Razão Social</label>
+                <input type="text" id="nome" name="nome" value="{{.Data.Cliente.Nome}}" required autofocus class="form-control">
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -69,17 +62,13 @@ function cnpjFeedback(input) {
                     <input type="text" id="telefone" name="telefone" value="{{.Data.Cliente.Telefone}}" class="form-control">
                 </div>
                 <div>
-                    <label for="slug_turso" class="block text-sm font-medium text-slate-800 mb-1">Slug Turso</label>
-                    <input type="text" id="slug_turso" name="slug_turso" value="{{.Data.Cliente.SlugTurso}}" class="form-control">
-                    <p class="form-hint">Slug do banco Turso (a-z, 0-9). Opcional.</p>
+                    <label class="block text-sm font-medium text-slate-800 mb-1">Código</label>
+                    <input type="text" value="{{.Data.Cliente.ClienteID}}" disabled class="form-control text-slate-400">
+                    <p class="form-hint">Não pode ser alterado.</p>
                 </div>
                 <div>
                     <label for="valid_until" class="block text-sm font-medium text-slate-800 mb-1">Validade</label>
                     <input type="date" id="valid_until" name="valid_until" value="{{.Data.Cliente.ValidUntil}}" class="form-control">
-                </div>
-                <div>
-                    <label for="max_instalacoes" class="block text-sm font-medium text-slate-800 mb-1">Máx. instalações</label>
-                    <input type="number" id="max_instalacoes" name="max_instalacoes" value="{{.Data.Cliente.MaxInstalacoes}}" min="1" class="form-control">
                 </div>
                 <div>
                     <label for="status" class="block text-sm font-medium text-slate-800 mb-1">Status</label>
@@ -105,16 +94,9 @@ function cnpjFeedback(input) {
         <form action="/config/clientes/new" method="POST" class="space-y-5">
             <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 
-            <div class="grid grid-cols-1 md:grid-cols-[10rem_1fr] gap-4">
-                <div>
-                    <label for="cliente_id" class="block text-sm font-medium text-slate-800 mb-1">Código</label>
-                    <input type="text" id="cliente_id" name="cliente_id" value="{{with .Data.Cliente}}{{.ClienteID}}{{end}}" required autofocus class="form-control">
-                    <p class="form-hint">Identificador único (a-z, 0-9).</p>
-                </div>
-                <div>
-                    <label for="nome" class="block text-sm font-medium text-slate-800 mb-1">Nome / Razão Social</label>
-                    <input type="text" id="nome" name="nome" value="{{with .Data.Cliente}}{{.Nome}}{{end}}" required class="form-control">
-                </div>
+            <div>
+                <label for="nome" class="block text-sm font-medium text-slate-800 mb-1">Nome / Razão Social</label>
+                <input type="text" id="nome" name="nome" value="{{with .Data.Cliente}}{{.Nome}}{{end}}" required autofocus class="form-control">
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -132,17 +114,13 @@ function cnpjFeedback(input) {
                     <input type="text" id="telefone" name="telefone" value="{{with .Data.Cliente}}{{.Telefone}}{{end}}" class="form-control">
                 </div>
                 <div>
-                    <label for="slug_turso" class="block text-sm font-medium text-slate-800 mb-1">Slug Turso</label>
-                    <input type="text" id="slug_turso" name="slug_turso" value="{{with .Data.Cliente}}{{.SlugTurso}}{{end}}" class="form-control">
-                    <p class="form-hint">Slug do banco Turso (a-z, 0-9). Opcional.</p>
+                    <label for="cliente_id" class="block text-sm font-medium text-slate-800 mb-1">Código</label>
+                    <input type="text" id="cliente_id" name="cliente_id" value="{{with .Data.Cliente}}{{.ClienteID}}{{end}}" required class="form-control">
+                    <p class="form-hint">Identificador único (a-z, 0-9).</p>
                 </div>
                 <div>
                     <label for="valid_until" class="block text-sm font-medium text-slate-800 mb-1">Validade</label>
                     <input type="date" id="valid_until" name="valid_until" value="{{with .Data.Cliente}}{{.ValidUntil}}{{end}}" class="form-control">
-                </div>
-                <div>
-                    <label for="max_instalacoes" class="block text-sm font-medium text-slate-800 mb-1">Máx. instalações</label>
-                    <input type="number" id="max_instalacoes" name="max_instalacoes" value="{{with .Data.Cliente}}{{.MaxInstalacoes}}{{else}}1{{end}}" min="1" class="form-control">
                 </div>
                 <div>
                     <label for="status" class="block text-sm font-medium text-slate-800 mb-1">Status</label>

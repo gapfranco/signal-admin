@@ -227,8 +227,8 @@ func scanCliente(row interface {
 	var c models.Cliente
 	var validUntil sql.NullString
 	err := row.Scan(
-		&c.ClienteID, &c.Nome, &c.CNPJ, &c.Email, &c.Telefone, &c.SlugTurso,
-		&validUntil, &c.MaxInstalacoes, &c.Status, &c.Observacao, &c.CreatedAt, &c.UpdatedAt,
+		&c.ClienteID, &c.Nome, &c.CNPJ, &c.Email, &c.Telefone,
+		&validUntil, &c.Status, &c.Observacao, &c.CreatedAt, &c.UpdatedAt,
 	)
 	if err != nil {
 		return models.Cliente{}, err
@@ -249,19 +249,19 @@ func (t *TursoDB) CreateCliente(c models.Cliente) error {
 	}
 	_, err := t.db.Exec(`
 		INSERT INTO clientes (
-			cliente_id, nome, cnpj, email, telefone, slug_turso, valid_until,
-			max_instalacoes, status, observacao, created_at, updated_at
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-		c.ClienteID, c.Nome, c.CNPJ, c.Email, c.Telefone, c.SlugTurso, validUntil,
-		c.MaxInstalacoes, c.Status, c.Observacao, c.CreatedAt, c.UpdatedAt,
+			cliente_id, nome, cnpj, email, telefone, valid_until,
+			status, observacao, created_at, updated_at
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		c.ClienteID, c.Nome, c.CNPJ, c.Email, c.Telefone, validUntil,
+		c.Status, c.Observacao, c.CreatedAt, c.UpdatedAt,
 	)
 	return err
 }
 
 func (t *TursoDB) GetCliente(clienteID string) (*models.Cliente, error) {
 	row := t.db.QueryRow(`
-		SELECT cliente_id, nome, cnpj, email, telefone, slug_turso, valid_until,
-		       max_instalacoes, status, observacao, created_at, updated_at
+		SELECT cliente_id, nome, cnpj, email, telefone, valid_until,
+		       status, observacao, created_at, updated_at
 		FROM clientes WHERE cliente_id = ?`, clienteID)
 	c, err := scanCliente(row)
 	if err != nil {
@@ -278,11 +278,11 @@ func (t *TursoDB) UpdateCliente(c models.Cliente) error {
 	}
 	_, err := t.db.Exec(`
 		UPDATE clientes SET
-			nome = ?, cnpj = ?, email = ?, telefone = ?, slug_turso = ?, valid_until = ?,
-			max_instalacoes = ?, status = ?, observacao = ?, updated_at = ?
+			nome = ?, cnpj = ?, email = ?, telefone = ?, valid_until = ?,
+			status = ?, observacao = ?, updated_at = ?
 		WHERE cliente_id = ?`,
-		c.Nome, c.CNPJ, c.Email, c.Telefone, c.SlugTurso, validUntil,
-		c.MaxInstalacoes, c.Status, c.Observacao, c.UpdatedAt, c.ClienteID,
+		c.Nome, c.CNPJ, c.Email, c.Telefone, validUntil,
+		c.Status, c.Observacao, c.UpdatedAt, c.ClienteID,
 	)
 	return err
 }
@@ -308,8 +308,8 @@ func (t *TursoDB) ListClientesFilter(clienteID, nome, status string, limit, offs
 	}
 
 	listQuery := `
-		SELECT cliente_id, nome, cnpj, email, telefone, slug_turso, valid_until,
-		       max_instalacoes, status, observacao, created_at, updated_at
+		SELECT cliente_id, nome, cnpj, email, telefone, valid_until,
+		       status, observacao, created_at, updated_at
 		FROM clientes ` + where + ` ORDER BY nome LIMIT ? OFFSET ?`
 	listArgs := append(append([]any{}, args...), limit, offset)
 	rows, err := t.db.Query(listQuery, listArgs...)

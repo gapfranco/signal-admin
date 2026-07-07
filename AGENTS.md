@@ -30,6 +30,6 @@ Turso sync (`DB_MODE=sync`): nuvem como fonte de verdade, `local.db` como répli
 ## Escopo atual
 
 - Usuários (auth idêntica ao hs-financ)
-- Clientes (signal-ready: slug_turso, valid_until, max_instalacoes, status)
+- Clientes (signal-ready: valid_until, status)
 
 Fora de escopo: provisionamento Turso, tabela installations, integração signal-provision.

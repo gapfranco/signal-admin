@@ -14,16 +14,14 @@ const clientesPageSize = 10
 var slugRegex = regexp.MustCompile(`^[a-z0-9]+$`)
 
 type clienteForm struct {
-	ClienteID      string `form:"cliente_id"`
-	Nome           string `form:"nome"`
-	CNPJ           string `form:"cnpj"`
-	Email          string `form:"email"`
-	Telefone       string `form:"telefone"`
-	SlugTurso      string `form:"slug_turso"`
-	ValidUntil     string `form:"valid_until"`
-	MaxInstalacoes int    `form:"max_instalacoes"`
-	Status         string `form:"status"`
-	Observacao     string `form:"observacao"`
+	ClienteID  string `form:"cliente_id"`
+	Nome       string `form:"nome"`
+	CNPJ       string `form:"cnpj"`
+	Email      string `form:"email"`
+	Telefone   string `form:"telefone"`
+	ValidUntil string `form:"valid_until"`
+	Status     string `form:"status"`
+	Observacao string `form:"observacao"`
 }
 
 func validSlug(s string) bool {
@@ -80,47 +78,40 @@ func (app *application) clienteNew(w http.ResponseWriter, r *http.Request) {
 func (app *application) validateClienteForm(form clienteForm, editMode bool) (string, *models.Cliente) {
 	form.ClienteID = strings.TrimSpace(form.ClienteID)
 	form.Nome = strings.TrimSpace(form.Nome)
-	form.SlugTurso = strings.TrimSpace(strings.ToLower(form.SlugTurso))
 	form.Status = strings.TrimSpace(form.Status)
+
+	cliente := &models.Cliente{
+		ClienteID:  form.ClienteID,
+		Nome:       form.Nome,
+		CNPJ:       form.CNPJ,
+		Email:      strings.TrimSpace(form.Email),
+		Telefone:   strings.TrimSpace(form.Telefone),
+		ValidUntil: strings.TrimSpace(form.ValidUntil),
+		Status:     form.Status,
+		Observacao: strings.TrimSpace(form.Observacao),
+	}
 
 	if !editMode {
 		if form.ClienteID == "" || form.Nome == "" {
-			return "Código e nome são obrigatórios", nil
+			return "Código e nome são obrigatórios", cliente
 		}
 		if !validSlug(form.ClienteID) {
-			return "Código deve conter apenas letras minúsculas e números", nil
+			return "Código deve conter apenas letras minúsculas e números", cliente
 		}
 	} else if form.Nome == "" {
-		return "Nome é obrigatório", nil
+		return "Nome é obrigatório", cliente
 	}
 
 	if !validarCNPJ(form.CNPJ) {
-		return "CNPJ inválido", nil
-	}
-	if form.SlugTurso != "" && !validSlug(form.SlugTurso) {
-		return "Slug Turso deve conter apenas letras minúsculas e números", nil
-	}
-	if form.MaxInstalacoes < 1 {
-		return "Máximo de instalações deve ser pelo menos 1", nil
+		return "CNPJ inválido", cliente
 	}
 	switch form.Status {
 	case "active", "suspended", "inactive":
 	default:
-		return "Status inválido", nil
+		return "Status inválido", cliente
 	}
 
-	return "", &models.Cliente{
-		ClienteID:      form.ClienteID,
-		Nome:           form.Nome,
-		CNPJ:           form.CNPJ,
-		Email:          strings.TrimSpace(form.Email),
-		Telefone:       strings.TrimSpace(form.Telefone),
-		SlugTurso:      form.SlugTurso,
-		ValidUntil:     strings.TrimSpace(form.ValidUntil),
-		MaxInstalacoes: form.MaxInstalacoes,
-		Status:         form.Status,
-		Observacao:     strings.TrimSpace(form.Observacao),
-	}
+	return "", cliente
 }
 
 func (app *application) clienteNewPost(w http.ResponseWriter, r *http.Request) {
@@ -128,9 +119,6 @@ func (app *application) clienteNewPost(w http.ResponseWriter, r *http.Request) {
 	if err := app.decodePostForm(r, &form); err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
-	}
-	if form.MaxInstalacoes == 0 {
-		form.MaxInstalacoes = 1
 	}
 	if form.Status == "" {
 		form.Status = "active"
@@ -198,9 +186,6 @@ func (app *application) clienteEditPost(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	form.ClienteID = clienteID
-	if form.MaxInstalacoes == 0 {
-		form.MaxInstalacoes = existing.MaxInstalacoes
-	}
 	if form.Status == "" {
 		form.Status = existing.Status
 	}
