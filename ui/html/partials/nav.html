@@ -1,0 +1,35 @@
+{{define "nav"}}
+<div class="hidden md:flex items-center h-10 gap-0">
+    {{if .IsAuthenticated}}
+
+    <div class="relative dropdown-container h-full flex items-center">
+        <button type="button" onclick="toggleMenu('menu-cadastros', event)" class="nav-link {{if eq .ActiveMenu "cadastros"}}nav-link-active{{else}}nav-link-inactive{{end}}">
+            Cadastros
+            <svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div id="menu-cadastros" class="dropdown-menu nav-dropdown hidden w-44">
+            <a href="/config/clientes" class="nav-dropdown-item {{if eq .ActiveSubmenu "clientes"}}nav-dropdown-item-active{{end}}">Clientes</a>
+        </div>
+    </div>
+
+    <div class="relative dropdown-container h-full flex items-center">
+        <button type="button" onclick="toggleMenu('menu-config', event)" class="nav-link {{if eq .ActiveMenu "config"}}nav-link-active{{else}}nav-link-inactive{{end}}">
+            Configuração
+            <svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div id="menu-config" class="dropdown-menu nav-dropdown hidden w-44">
+            <a href="/config/usuarios" class="nav-dropdown-item {{if eq .ActiveSubmenu "usuarios"}}nav-dropdown-item-active{{end}}">Usuários</a>
+        </div>
+    </div>
+
+    {{end}}
+</div>
+{{end}}
+
+{{define "nav_mobile"}}
+<p class="nav-mobile-section">Cadastros</p>
+<a href="/config/clientes" class="nav-mobile-link {{if eq .ActiveSubmenu "clientes"}}nav-mobile-link-active{{end}}">Clientes</a>
+
+<p class="nav-mobile-section">Configuração</p>
+<a href="/config/usuarios" class="nav-mobile-link {{if eq .ActiveSubmenu "usuarios"}}nav-mobile-link-active{{end}}">Usuários</a>
+{{end}}

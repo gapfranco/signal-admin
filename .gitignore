@@ -1,0 +1,34 @@
+
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+build/
+out/
+dist/
+data/
+ui/static/css/styles.css
+local.*
+cmd/signal-admin/__debug*
+
+# Testes e Cobertura
+*.test
+*.out
+coverage.txt
+profile.out
+
+# IDEs e Editores
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Variáveis de Ambiente
+.env
+signal-admin.conf
+local.db
+local.db-*
+
+# Dependências
+vendor/

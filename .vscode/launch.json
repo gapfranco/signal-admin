@@ -1,0 +1,35 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Signal Admin (desktop)",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}/cmd/signal-admin",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "tailwind-build"
+    },
+    {
+      "name": "Signal Admin (local, sem sync)",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}/cmd/signal-admin",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "DB_MODE": "local"
+      },
+      "preLaunchTask": "tailwind-build"
+    },
+    {
+      "name": "Signal Admin (Turso sync)",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}/cmd/signal-admin",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "tailwind-build"
+    }
+  ]
+}

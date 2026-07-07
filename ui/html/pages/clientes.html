@@ -1,0 +1,112 @@
+{{define "main"}}
+<div class="page-list-wide">
+    <header class="page-header flex flex-wrap items-end justify-between gap-4">
+        <div>
+            <p class="page-header-eyebrow">Cadastros</p>
+            <h1 class="page-header-title">Clientes</h1>
+            <p class="page-header-desc">Gerencie clientes e instalações Signal.</p>
+        </div>
+        <a href="/config/clientes/new" class="btn-primary">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Novo Cliente
+        </a>
+    </header>
+
+    <div class="filter-card">
+        <p class="filter-card-title">Filtros</p>
+        <form method="GET" action="/config/clientes" class="flex flex-wrap gap-3 items-end">
+            <div class="w-full sm:w-44">
+                <label class="block text-sm font-medium text-slate-800 mb-1">Código</label>
+                <input type="text" name="cliente_id" value="{{.Data.FilterID}}" placeholder="Filtrar por código..."
+                    class="form-control">
+            </div>
+            <div class="flex-1 min-w-[12rem]">
+                <label class="block text-sm font-medium text-slate-800 mb-1">Nome</label>
+                <input type="text" name="nome" value="{{.Data.FilterNome}}" placeholder="Filtrar por nome..."
+                    class="form-control">
+            </div>
+            <div class="w-full sm:w-40">
+                <label class="block text-sm font-medium text-slate-800 mb-1">Status</label>
+                <select name="status" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="active" {{if eq .Data.FilterStatus "active"}}selected{{end}}>Ativo</option>
+                    <option value="suspended" {{if eq .Data.FilterStatus "suspended"}}selected{{end}}>Suspenso</option>
+                    <option value="inactive" {{if eq .Data.FilterStatus "inactive"}}selected{{end}}>Inativo</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-primary">Buscar</button>
+            {{if or .Data.FilterID .Data.FilterNome .Data.FilterStatus}}
+            <a href="/config/clientes" class="btn-secondary">Limpar</a>
+            {{end}}
+        </form>
+    </div>
+
+    <div class="table-card">
+        {{if .Data.Clientes}}
+        <div class="table-scroll">
+        <table class="data-table">
+            <thead class="data-table-head">
+                <tr>
+                    <th scope="col">Código</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">CNPJ</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Validade</th>
+                    <th scope="col" class="text-right">Ações</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {{range .Data.Clientes}}
+                <tr class="data-table-row">
+                    <td class="font-medium text-slate-800">{{.ClienteID}}</td>
+                    <td class="text-slate-700">{{.Nome}}</td>
+                    <td class="text-slate-600">{{.CNPJ}}</td>
+                    <td>
+                        <span class="badge {{if eq .Status "active"}}badge-success{{else if eq .Status "suspended"}}badge-warning{{else}}badge-muted{{end}}">
+                            {{statusLabel .Status}}
+                        </span>
+                    </td>
+                    <td class="text-slate-600">{{formatDateBR .ValidUntil}}</td>
+                    <td class="text-right">
+                        <div class="inline-flex items-center gap-1">
+                            <a href="/config/clientes/{{.ClienteID}}/edit" class="btn-ghost btn-sm">Alterar</a>
+                            <form action="/config/clientes/{{.ClienteID}}/delete" method="POST" onsubmit="return confirm('Confirma a exclusão do cliente {{.ClienteID}}?')">
+                                <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
+                                <button type="submit" class="btn-danger btn-sm">Excluir</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+        </div>
+
+        <div class="pagination-bar">
+            <div>
+                Mostrando <span class="font-semibold">{{len .Data.Clientes}}</span> de <span class="font-semibold">{{.Data.Pagination.TotalItems}}</span> registros
+            </div>
+            <div class="flex gap-1">
+                <a href="/config/clientes?page={{.Data.Pagination.PrevPage}}&cliente_id={{.Data.FilterID}}&nome={{.Data.FilterNome}}&status={{.Data.FilterStatus}}"
+                    class="pagination-btn {{if not .Data.Pagination.HasPrev}}pagination-btn-disabled{{end}}">
+                    Anterior
+                </a>
+                <span class="pagination-current">
+                    Pág. {{.Data.Pagination.CurrentPage}} / {{.Data.Pagination.TotalPages}}
+                </span>
+                <a href="/config/clientes?page={{.Data.Pagination.NextPage}}&cliente_id={{.Data.FilterID}}&nome={{.Data.FilterNome}}&status={{.Data.FilterStatus}}"
+                    class="pagination-btn {{if not .Data.Pagination.HasNext}}pagination-btn-disabled{{end}}">
+                    Próxima
+                </a>
+            </div>
+        </div>
+        {{else}}
+        {{if or .Data.FilterID .Data.FilterNome .Data.FilterStatus}}
+        {{template "empty_state" dict "Title" "Nenhum cliente encontrado" "Message" "Tente ajustar os filtros informados."}}
+        {{else}}
+        {{template "empty_state" dict "Title" "Nenhum cliente cadastrado" "Message" "Comece cadastrando o primeiro cliente." "LinkURL" "/config/clientes/new" "LinkText" "Novo Cliente"}}
+        {{end}}
+        {{end}}
+    </div>
+</div>
+{{end}}

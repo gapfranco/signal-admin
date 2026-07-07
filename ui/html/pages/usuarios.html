@@ -1,0 +1,89 @@
+{{define "main"}}
+<div class="page-list-wide">
+    <header class="page-header flex flex-wrap items-end justify-between gap-4">
+        <div>
+            <p class="page-header-eyebrow">Configuração</p>
+            <h1 class="page-header-title">Usuários</h1>
+            <p class="page-header-desc">Gerencie acessos ao Signal Admin.</p>
+        </div>
+        <a href="/config/usuarios/new" class="btn-primary">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Novo Usuário
+        </a>
+    </header>
+
+    <form method="GET" action="/config/usuarios" class="flex gap-3 mb-4">
+        <input type="text" name="usuario" value="{{.Data.FilterUsuario}}" placeholder="Filtrar por login..."
+            class="flex-1 form-control">
+        <input type="text" name="nome" value="{{.Data.FilterNome}}" placeholder="Filtrar por nome..."
+            class="flex-1 form-control">
+        <button type="submit" class="btn-primary">Buscar</button>
+        {{if or .Data.FilterUsuario .Data.FilterNome}}
+        <a href="/config/usuarios" class="btn-secondary">Limpar</a>
+        {{end}}
+    </form>
+
+    <div class="table-card">
+        {{if .Data.Users}}
+        <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 text-slate-600 uppercase text-[10px] font-bold border-b border-slate-200">
+                <tr>
+                    <th class="px-6 py-3">Login</th>
+                    <th class="px-6 py-3">Nome</th>
+                    <th class="px-6 py-3 text-right">Ações</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {{range .Data.Users}}
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-medium text-slate-800">
+                        {{.Usuario}}
+                        {{if eq .Usuario $.Data.CurrentUser}}
+                        <span class="ml-2 text-[10px] font-semibold uppercase tracking-wide text-navy-600 bg-navy-50 px-2 py-0.5 rounded-full">você</span>
+                        {{end}}
+                    </td>
+                    <td class="px-6 py-4 text-slate-700">{{.Nome}}</td>
+                    <td class="px-6 py-4 text-right">
+                        <div class="inline-flex items-center gap-2">
+                            <a href="/config/usuarios/{{.ID}}/edit" class="btn-ghost btn-sm">Alterar</a>
+                            {{if eq .Usuario $.Data.CurrentUser}}
+                            <span class="text-sm text-slate-300 cursor-not-allowed" title="Não é possível excluir o usuário atual">Excluir</span>
+                            {{else}}
+                            <form action="/config/usuarios/{{.ID}}/delete" method="POST" onsubmit="return confirm('Confirma a exclusão do usuário {{.Usuario}}?')">
+                                <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
+                                <button type="submit" class="btn-danger btn-sm">Excluir</button>
+                            </form>
+                            {{end}}
+                        </div>
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+
+        <div class="pagination-bar">
+            <div>
+                Mostrando <span class="font-semibold">{{len .Data.Users}}</span> de <span class="font-semibold">{{.Data.Pagination.TotalItems}}</span> registros
+            </div>
+            <div class="flex gap-1">
+                <a href="/config/usuarios?page={{.Data.Pagination.PrevPage}}&usuario={{.Data.FilterUsuario}}&nome={{.Data.FilterNome}}"
+                    class="pagination-btn {{if not .Data.Pagination.HasPrev}}pagination-btn-disabled{{end}}">
+                    Anterior
+                </a>
+                <span class="pagination-current">
+                    Pág. {{.Data.Pagination.CurrentPage}} / {{.Data.Pagination.TotalPages}}
+                </span>
+                <a href="/config/usuarios?page={{.Data.Pagination.NextPage}}&usuario={{.Data.FilterUsuario}}&nome={{.Data.FilterNome}}"
+                    class="pagination-btn {{if not .Data.Pagination.HasNext}}pagination-btn-disabled{{end}}">
+                    Próxima
+                </a>
+            </div>
+        </div>
+        {{else}}
+        <div class="p-12 text-center text-slate-400 italic">
+            {{if or .Data.FilterUsuario .Data.FilterNome}}Nenhum usuário encontrado para os filtros informados.{{else}}Nenhum usuário cadastrado.{{end}}
+        </div>
+        {{end}}
+    </div>
+</div>
+{{end}}

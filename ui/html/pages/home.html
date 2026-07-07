@@ -1,0 +1,33 @@
+{{define "main"}}
+<div class="max-w-4xl mx-auto">
+    <header class="page-header text-center md:text-left">
+        <p class="page-header-eyebrow">Signal Admin</p>
+        <h1 class="page-header-title">Controle de Instalações</h1>
+        <p class="page-header-desc">Gerencie clientes e acessos ao sistema Signal.</p>
+    </header>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <a href="/config/clientes" class="table-card p-5 hover:border-navy-300 hover:shadow-md transition-all group">
+            <div class="flex items-start justify-between">
+                <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                </div>
+                <svg class="w-4 h-4 text-slate-300 group-hover:text-navy-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </div>
+            <h2 class="mt-4 font-semibold text-slate-900">Cadastros</h2>
+            <p class="mt-1 text-sm text-slate-600">Clientes e instalações Signal.</p>
+        </a>
+
+        <a href="/config/usuarios" class="table-card p-5 hover:border-navy-300 hover:shadow-md transition-all group">
+            <div class="flex items-start justify-between">
+                <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                </div>
+                <svg class="w-4 h-4 text-slate-300 group-hover:text-navy-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </div>
+            <h2 class="mt-4 font-semibold text-slate-900">Usuários</h2>
+            <p class="mt-1 text-sm text-slate-600">Gerencie acessos ao sistema.</p>
+        </a>
+    </div>
+</div>
+{{end}}

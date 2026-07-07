@@ -1,0 +1,38 @@
+{{define "main"}}
+<div class="w-full max-w-sm mx-auto">
+    <div class="form-card p-8 shadow-lg">
+        <div class="mb-6 text-center">
+            <h2 class="text-2xl font-bold text-slate-900">Acesse sua conta</h2>
+            <p class="text-slate-500 text-sm mt-1">{{.Data.NomeEmpresa}}</p>
+        </div>
+
+        {{if .Flash}}
+        <div class="flash-banner flash-success mb-4" role="status">{{.Flash}}</div>
+        {{end}}
+
+        <form action="/login" method="POST" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+
+            <div>
+                <label for="usuario" class="block text-sm font-medium text-slate-800 mb-1">Usuário</label>
+                <input type="text" id="usuario" name="usuario" required autofocus autocomplete="username"
+                    class="form-control">
+            </div>
+
+            <div>
+                <label for="senha" class="block text-sm font-medium text-slate-800 mb-1">Senha</label>
+                <input type="password" id="senha" name="senha" required autocomplete="current-password"
+                    class="form-control">
+            </div>
+
+            <button type="submit" class="btn-primary w-full mt-2">
+                Entrar
+            </button>
+        </form>
+    </div>
+
+    <div class="mt-6 text-center text-slate-400 text-xs">
+        Signal Admin &bull; {{.Data.NomeEmpresa}}
+    </div>
+</div>
+{{end}}
