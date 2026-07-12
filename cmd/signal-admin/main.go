@@ -10,6 +10,7 @@ import (
 
 	"signal-admin/config"
 	"signal-admin/internal/migrations"
+	"signal-admin/internal/provision"
 	"signal-admin/internal/storage"
 
 	"github.com/alexedwards/scs/v2"
@@ -23,6 +24,7 @@ type application struct {
 	formDecoder    *form.Decoder
 	db             *storage.TursoDB
 	config         config.Config
+	provision      *provision.Service
 	setupDone      atomic.Bool
 }
 
@@ -78,6 +80,7 @@ func main() {
 		formDecoder:    form.NewDecoder(),
 		db:             db,
 		config:         cfg,
+		provision:      provision.NewService(os.Getenv("TURSO_ORG"), os.Getenv("TURSO_TOKEN"), logger),
 	}
 
 	hasUsers, err := db.HasUsers()

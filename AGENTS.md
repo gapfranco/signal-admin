@@ -31,5 +31,25 @@ Turso sync (`DB_MODE=sync`): nuvem como fonte de verdade, `local.db` como répli
 
 - Usuários (auth idêntica ao hs-financ)
 - Clientes (signal-ready: valid_until, status)
+- Provisionamento Turso por cliente (`internal/provision` + `internal/clientstorage`)
 
-Fora de escopo: provisionamento Turso, tabela installations, integração signal-provision.
+## Provisionamento Turso
+
+Ao criar um cliente, o admin provisiona automaticamente um banco Turso remoto (nome = `cliente_id`), aplica o schema Signal remoto, registra a licença e gera `{cliente_id}-signal.conf` e `{cliente_id}-antena.conf` no diretório de execução.
+
+Configuração necessária via **variáveis de ambiente** (não no `signal-admin.conf`):
+
+```bash
+export TURSO_ORG=          # slug da organização Turso
+export TURSO_TOKEN=        # token Platform API da organização (distinto de DB_TOKEN)
+```
+
+Comportamento:
+
+- Banco já existente: cliente é criado, flash de aviso
+- Exclusão de cliente: registro removido; banco Turso na nuvem permanece (flash de aviso se existir)
+- Sem `TURSO_ORG`/`TURSO_TOKEN` no ambiente: cliente criado sem provisionar
+
+Código duplicado do projeto signal (coexistência temporária até remoção futura no signal).
+
+Fora de escopo: tabela installations, deprovision/delete Turso, deploy Antena.

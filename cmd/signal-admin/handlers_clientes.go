@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"signal-admin/internal/models"
+	"signal-admin/internal/provision"
 )
 
 const clientesPageSize = 10
@@ -151,7 +152,9 @@ func (app *application) clienteNewPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	app.syncDB(r.Context())
-	app.sessionManager.Put(r.Context(), "flash", "Cliente criado com sucesso.")
+
+	outcome := app.provision.ProvisionCliente(r.Context(), *cliente)
+	app.sessionManager.Put(r.Context(), "flash", provision.CreateFlashMessage(outcome))
 	http.Redirect(w, r, "/config/clientes", http.StatusSeeOther)
 }
 
@@ -219,11 +222,22 @@ func (app *application) clienteDelete(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 		return
 	}
+
+	dbExists := false
+	if app.provision.Enabled() {
+		exists, err := app.provision.ClienteDBExists(r.Context(), clienteID)
+		if err != nil {
+			app.logger.Warn("failed to check turso database existence", "cliente_id", clienteID, "error", err)
+		} else {
+			dbExists = exists
+		}
+	}
+
 	if err := app.db.DeleteCliente(clienteID); err != nil {
 		app.serverError(w, r, err)
 		return
 	}
 	app.syncDB(r.Context())
-	app.sessionManager.Put(r.Context(), "flash", "Cliente excluído.")
+	app.sessionManager.Put(r.Context(), "flash", provision.DeleteFlashMessage(clienteID, dbExists))
 	http.Redirect(w, r, "/config/clientes", http.StatusSeeOther)
 }
