@@ -6,7 +6,7 @@ TAILWIND_BIN=tailwindcss
 TW_INPUT=./ui/input.css
 TW_OUTPUT=./ui/static/css/styles.css
 
-.PHONY: all clean build tailwind-build tailwind-watch
+.PHONY: all clean build tailwind-build tailwind-watch manual-pdf
 
 all: build
 
@@ -33,6 +33,9 @@ linux: tailwind-build
 darwin: tailwind-build
 	@mkdir -p $(OUT_DIR)
 	GOOS=darwin GOARCH=amd64 go build -o $(OUT_DIR)/$(BINARY_NAME)_mac $(SRC_PATH)
+
+manual-pdf:
+	@./recursos/build-pdf.sh
 
 clean:
 	rm -rf $(OUT_DIR)

@@ -35,3 +35,4 @@ instals/
 
 # Dependências
 vendor/
+node_modules/

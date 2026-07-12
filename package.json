@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "gray-matter": "^4.0.3",
+    "marked": "^4.3.0",
+    "puppeteer-core": "^24.2.0"
+  }
+}
