@@ -51,6 +51,7 @@
                     <th scope="col">Nome</th>
                     <th scope="col">Validade</th>
                     <th scope="col">Status</th>
+                    <th scope="col">OnFly</th>
                     <th scope="col" class="text-right">Ações</th>
                 </tr>
             </thead>
@@ -63,6 +64,11 @@
                     <td>
                         <span class="badge {{if eq .Status "active"}}badge-success{{else if eq .Status "suspended"}}badge-warning{{else}}badge-muted{{end}}">
                             {{statusLabel .Status}}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge {{if .OnFly}}badge-success{{else}}badge-muted{{end}}">
+                            {{if .OnFly}}Sim{{else}}Não{{end}}
                         </span>
                     </td>
                     <td class="text-right">

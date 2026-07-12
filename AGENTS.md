@@ -30,8 +30,9 @@ Turso sync (`DB_MODE=sync`): nuvem como fonte de verdade, `local.db` como répli
 ## Escopo atual
 
 - Usuários (auth idêntica ao hs-financ)
-- Clientes (signal-ready: valid_until, status)
+- Clientes (signal-ready: valid_until, status, onfly)
 - Provisionamento Turso por cliente (`internal/provision` + `internal/clientstorage`)
+- Deploy opcional da Antena no Fly.io por cliente
 
 ## Provisionamento Turso
 
@@ -52,4 +53,15 @@ Comportamento:
 
 Código duplicado do projeto signal (coexistência temporária até remoção futura no signal).
 
-Fora de escopo: tabela installations, deprovision/delete Turso, deploy Antena.
+## Deploy Antena no Fly.io
+
+Na tela de alteração de cliente, o botão **Instalar em fly.io** (ativo só se `onfly` for falso) cria o app `antena-<cliente_id>` na org Fly `personal`, define secrets a partir de `instals/<cliente_id>-antena.conf` e faz deploy da imagem `ghcr.io/gapfranco/antena:latest` (`fly.toml.example`).
+
+Pré-requisitos na máquina do operador:
+
+- `fly` / `flyctl` no PATH e autenticado (`fly auth login`)
+- Arquivo `instals/<cliente_id>-antena.conf` gerado pelo provisionamento Turso
+
+Após sucesso, `onfly` é marcado como true. Sem deprovision/destroy do app Fly.
+
+Fora de escopo: tabela installations, deprovision/delete Turso, destroy do app Fly.

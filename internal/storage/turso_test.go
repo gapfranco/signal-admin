@@ -38,10 +38,35 @@ func TestClientesCRUDLocal(t *testing.T) {
 	if got.Nome != "Cliente Teste" {
 		t.Fatalf("Nome = %q, want Cliente Teste", got.Nome)
 	}
+	if got.OnFly {
+		t.Fatal("OnFly = true, want false after create")
+	}
 
 	c.Nome = "Cliente Atualizado"
 	if err := db.UpdateCliente(c); err != nil {
 		t.Fatalf("UpdateCliente: %v", err)
+	}
+
+	got, err = db.GetCliente("cliente1")
+	if err != nil {
+		t.Fatalf("GetCliente after update: %v", err)
+	}
+	if got.OnFly {
+		t.Fatal("OnFly = true, want false after update")
+	}
+
+	if err := db.SetOnFly("cliente1", true); err != nil {
+		t.Fatalf("SetOnFly: %v", err)
+	}
+	got, err = db.GetCliente("cliente1")
+	if err != nil {
+		t.Fatalf("GetCliente after SetOnFly: %v", err)
+	}
+	if !got.OnFly {
+		t.Fatal("OnFly = false, want true after SetOnFly")
+	}
+	if got.Nome != "Cliente Atualizado" {
+		t.Fatalf("Nome = %q after SetOnFly, want Cliente Atualizado", got.Nome)
 	}
 
 	list, total, err := db.ListClientesFilter("", "Atualizado", "", 10, 0)

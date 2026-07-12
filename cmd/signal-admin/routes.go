@@ -37,6 +37,7 @@ func (app *application) routes() http.Handler {
 	protected.HandleFunc("POST /config/clientes/new", app.clienteNewPost)
 	protected.HandleFunc("GET /config/clientes/{cliente_id}/edit", app.clienteEdit)
 	protected.HandleFunc("POST /config/clientes/{cliente_id}/edit", app.clienteEditPost)
+	protected.HandleFunc("POST /config/clientes/{cliente_id}/fly", app.clienteFlyInstall)
 	protected.HandleFunc("POST /config/clientes/{cliente_id}/delete", app.clienteDelete)
 	protected.HandleFunc("GET /config/usuarios", app.usuariosList)
 	protected.HandleFunc("GET /config/usuarios/new", app.usuarioNew)

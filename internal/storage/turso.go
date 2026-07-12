@@ -226,9 +226,10 @@ func scanCliente(row interface {
 }) (models.Cliente, error) {
 	var c models.Cliente
 	var validUntil sql.NullString
+	var onfly int
 	err := row.Scan(
 		&c.ClienteID, &c.Nome, &c.CNPJ, &c.Email, &c.Telefone,
-		&validUntil, &c.Status, &c.Observacao, &c.CreatedAt, &c.UpdatedAt,
+		&validUntil, &c.Status, &c.Observacao, &onfly, &c.CreatedAt, &c.UpdatedAt,
 	)
 	if err != nil {
 		return models.Cliente{}, err
@@ -236,6 +237,7 @@ func scanCliente(row interface {
 	if validUntil.Valid {
 		c.ValidUntil = validUntil.String
 	}
+	c.OnFly = onfly != 0
 	return c, nil
 }
 
@@ -261,7 +263,7 @@ func (t *TursoDB) CreateCliente(c models.Cliente) error {
 func (t *TursoDB) GetCliente(clienteID string) (*models.Cliente, error) {
 	row := t.db.QueryRow(`
 		SELECT cliente_id, nome, cnpj, email, telefone, valid_until,
-		       status, observacao, created_at, updated_at
+		       status, observacao, onfly, created_at, updated_at
 		FROM clientes WHERE cliente_id = ?`, clienteID)
 	c, err := scanCliente(row)
 	if err != nil {
@@ -283,6 +285,19 @@ func (t *TursoDB) UpdateCliente(c models.Cliente) error {
 		WHERE cliente_id = ?`,
 		c.Nome, c.CNPJ, c.Email, c.Telefone, validUntil,
 		c.Status, c.Observacao, c.UpdatedAt, c.ClienteID,
+	)
+	return err
+}
+
+func (t *TursoDB) SetOnFly(clienteID string, onfly bool) error {
+	val := 0
+	if onfly {
+		val = 1
+	}
+	now := time.Now().UTC().Format(time.RFC3339)
+	_, err := t.db.Exec(
+		`UPDATE clientes SET onfly = ?, updated_at = ? WHERE cliente_id = ?`,
+		val, now, clienteID,
 	)
 	return err
 }
@@ -309,7 +324,7 @@ func (t *TursoDB) ListClientesFilter(clienteID, nome, status string, limit, offs
 
 	listQuery := `
 		SELECT cliente_id, nome, cnpj, email, telefone, valid_until,
-		       status, observacao, created_at, updated_at
+		       status, observacao, onfly, created_at, updated_at
 		FROM clientes ` + where + ` ORDER BY nome LIMIT ? OFFSET ?`
 	listArgs := append(append([]any{}, args...), limit, offset)
 	rows, err := t.db.Query(listQuery, listArgs...)

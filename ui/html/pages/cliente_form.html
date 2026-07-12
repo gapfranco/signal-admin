@@ -90,6 +90,26 @@ function cnpjFeedback(input) {
                 <a href="/config/clientes" class="btn-secondary">Cancelar</a>
             </div>
         </form>
+
+        <div class="mt-6 pt-6 border-t border-slate-200">
+            <h3 class="text-sm font-medium text-slate-800 mb-3">Fly.io</h3>
+            {{if .Data.Cliente.OnFly}}
+            <p class="text-sm text-slate-500">Já instalado no fly.io.</p>
+            {{else}}
+            <form
+                hx-post="/config/clientes/{{.Data.Cliente.ClienteID}}/fly"
+                hx-disabled-elt="find button"
+                hx-indicator="#fly-install-indicator"
+                class="space-y-3"
+            >
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                <button type="submit" class="btn-secondary">Instalar em fly.io</button>
+                <p id="fly-install-indicator" class="htmx-indicator text-sm text-slate-600" role="status">
+                    Instalando no fly.io… isso pode levar alguns minutos.
+                </p>
+            </form>
+            {{end}}
+        </div>
         {{else}}
         <form action="/config/clientes/new" method="POST" class="space-y-5">
             <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">

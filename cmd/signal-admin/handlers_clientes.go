@@ -216,6 +216,47 @@ func (app *application) clienteEditPost(w http.ResponseWriter, r *http.Request) 
 	http.Redirect(w, r, "/config/clientes", http.StatusSeeOther)
 }
 
+func (app *application) clienteFlyInstall(w http.ResponseWriter, r *http.Request) {
+	clienteID := r.PathValue("cliente_id")
+	cliente, err := app.db.GetCliente(clienteID)
+	if err != nil {
+		app.notFound(w)
+		return
+	}
+
+	editURL := "/config/clientes/" + clienteID + "/edit"
+
+	if cliente.OnFly {
+		app.sessionManager.Put(r.Context(), "flash", provision.FlyAlreadyInstalledFlashMessage())
+		app.redirectAfterFly(w, r, editURL)
+		return
+	}
+
+	if err := provision.DeployFly(r.Context(), clienteID); err != nil {
+		app.logger.Error("fly install failed", "cliente_id", clienteID, "error", err)
+		app.sessionManager.Put(r.Context(), "flash", provision.FlyInstallErrorFlashMessage(err.Error()))
+		app.redirectAfterFly(w, r, editURL)
+		return
+	}
+
+	if err := app.db.SetOnFly(clienteID, true); err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+	app.syncDB(r.Context())
+	app.sessionManager.Put(r.Context(), "flash", provision.FlyInstallFlashMessage(clienteID))
+	app.redirectAfterFly(w, r, editURL)
+}
+
+func (app *application) redirectAfterFly(w http.ResponseWriter, r *http.Request, url string) {
+	if r.Header.Get("HX-Request") == "true" {
+		w.Header().Set("HX-Redirect", url)
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+	http.Redirect(w, r, url, http.StatusSeeOther)
+}
+
 func (app *application) clienteDelete(w http.ResponseWriter, r *http.Request) {
 	clienteID := r.PathValue("cliente_id")
 	if _, err := app.db.GetCliente(clienteID); err != nil {
