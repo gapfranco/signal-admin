@@ -30,5 +30,8 @@ signal-admin.conf
 local.db
 local.db-*
 
+# Configs gerados no provisionamento (contêm tokens)
+instals/
+
 # Dependências
 vendor/

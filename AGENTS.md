@@ -35,7 +35,7 @@ Turso sync (`DB_MODE=sync`): nuvem como fonte de verdade, `local.db` como répli
 
 ## Provisionamento Turso
 
-Ao criar um cliente, o admin provisiona automaticamente um banco Turso remoto (nome = `cliente_id`), aplica o schema Signal remoto, registra a licença e gera `{cliente_id}-signal.conf` e `{cliente_id}-antena.conf` no diretório de execução.
+Ao criar um cliente, o admin provisiona automaticamente um banco Turso remoto (nome = `cliente_id`), aplica o schema Signal remoto, registra a licença e gera `{cliente_id}-signal.conf` e `{cliente_id}-antena.conf` na pasta `instals/` na raiz do projeto.
 
 Configuração necessária via **variáveis de ambiente** (não no `signal-admin.conf`):
 

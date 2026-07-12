@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"signal-admin/internal/clientstorage"
 )
@@ -70,7 +71,12 @@ func Run(ctx context.Context, opts Options) (Result, error) {
 		return Result{}, fmt.Errorf("obter diretório atual: %w", err)
 	}
 
-	configs, err := WriteConfigFiles(cwd, opts.DB, databaseURL, authToken)
+	instalsDir := filepath.Join(cwd, "instals")
+	if err := os.MkdirAll(instalsDir, 0o755); err != nil {
+		return Result{}, fmt.Errorf("criar diretório instals: %w", err)
+	}
+
+	configs, err := WriteConfigFiles(instalsDir, opts.DB, databaseURL, authToken)
 	if err != nil {
 		return Result{}, err
 	}
